@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
@@ -10,23 +11,23 @@ public class Main {
             list.add(i);
         }
 
-        System.out.println("Lista inicial:" + list);
+        System.out.println("Lista inicial: " + list);
         Long initialTimeStamp = System.currentTimeMillis();
-        bogoSort(list);
+        AtomicInteger trys = new AtomicInteger(0);
+        bogoSort(list, trys);
         Long finalTimeStamp = System.currentTimeMillis();
         System.out.println("Lista ordenada: " + list);
-        System.out.println("Temo decorrido: " + (finalTimeStamp - initialTimeStamp) + "ms");
+        System.out.println("Tempo decorrido: " + (finalTimeStamp - initialTimeStamp) + "ms. " + trys.get() + " tentativas");
     }
 
-    public static void bogoSort(List<Integer> list) throws InterruptedException {
+    public static void bogoSort(List<Integer> list, AtomicInteger trys) throws InterruptedException {
         if (isSorted(list)) {
             return;
         }
-
+        trys.incrementAndGet();
         shuffle(list);
-        Thread.sleep(100);
         System.out.println(list);
-        bogoSort(list);
+        bogoSort(list, trys);
     }
 
     public static boolean isSorted(List<Integer> list) {
